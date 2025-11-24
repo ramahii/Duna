@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import Stats from './pages/Stats';
 
 function PrivateRoute({ children }) {
   const isAuthenticated = !!localStorage.getItem('access_token');
@@ -8,6 +10,18 @@ function PrivateRoute({ children }) {
 }
 
 export default function App() {
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('darkMode') === 'true';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode);
+  }, [darkMode]);
+
+  const toggleDarkMode = (value) => {
+    setDarkMode(value);
+  };
+
   return (
     <Router>
       <Routes>
@@ -16,7 +30,15 @@ export default function App() {
           path="/dashboard"
           element={
             <PrivateRoute>
-              <Dashboard />
+              <Dashboard darkMode={darkMode} setDarkMode={toggleDarkMode} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/stats"
+          element={
+            <PrivateRoute>
+              <Stats darkMode={darkMode} setDarkMode={toggleDarkMode} />
             </PrivateRoute>
           }
         />
