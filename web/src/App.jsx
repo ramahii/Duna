@@ -3,6 +3,8 @@ import { useEffect, useState } from 'react';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Stats from './pages/Stats';
+import Analytics from './pages/Analytics';
+import Settings from './pages/Settings';
 
 function PrivateRoute({ children }) {
   const isAuthenticated = !!localStorage.getItem('access_token');
@@ -39,6 +41,22 @@ export default function App() {
           element={
             <PrivateRoute>
               <Stats darkMode={darkMode} setDarkMode={toggleDarkMode} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/analytics"
+          element={
+            <PrivateRoute>
+              <Analytics darkMode={darkMode} setDarkMode={toggleDarkMode} />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <PrivateRoute>
+              <Settings darkMode={darkMode} setDarkMode={toggleDarkMode} />
             </PrivateRoute>
           }
         />

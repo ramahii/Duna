@@ -1,8 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { useTasks } from '../hooks/useTasks';
+import ProductivityDashboard from '../components/ProductivityDashboard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
-export default function Stats() {
+export default function Stats({ darkMode }) {
+  const navigate = useNavigate();
   const { tasks } = useTasks();
 
   // Calculate stats
@@ -44,50 +46,76 @@ export default function Stats() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">Task Statistics</h1>
+    <div className="min-h-screen bg-amber-50 transition-colors duration-300">
+      {/* Header */}
+      <header className="backdrop-blur-xl bg-white/40 border-b border-amber-100/40 sticky top-0 z-50 transition-colors duration-300">
+        <div className="max-w-6xl mx-auto px-4 py-6 flex justify-between items-center">
+          <div>
+            <h1 className="text-4xl font-bold text-amber-900 transition-colors duration-300">
+              📊 Statistics
+            </h1>
+            <p className="text-amber-700/70 text-sm mt-1">Track your progress</p>
+          </div>
+          <button
+            onClick={() => navigate('/dashboard')}
+            className="px-6 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-medium transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105"
+          >
+            ← Back
+          </button>
+        </div>
+      </header>
 
-      {/* Summary Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <div className="bg-white rounded-lg shadow p-6">
-          <p className="text-gray-600 text-sm">Total Tasks</p>
-          <p className="text-3xl font-bold text-blue-600">{totalTasks}</p>
+      <main className="max-w-6xl mx-auto px-4 py-8">
+        {/* Productivity Dashboard Component */}
+        <div className="mb-8">
+          <ProductivityDashboard darkMode={darkMode} />
         </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <p className="text-gray-600 text-sm">Completed</p>
-          <p className="text-3xl font-bold text-green-600">{completedTasks}</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <p className="text-gray-600 text-sm">Pending</p>
-          <p className="text-3xl font-bold text-yellow-600">{pendingTasks}</p>
-        </div>
-        <div className="bg-white rounded-lg shadow p-6">
-          <p className="text-gray-600 text-sm">Completion Rate</p>
-          <p className="text-3xl font-bold text-purple-600">
-            {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
-          </p>
-        </div>
-      </div>
 
-      {/* Charts */}
-      <div className="grid grid-cols-2 gap-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 hover:bg-white/45 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <p className="text-amber-700 text-sm font-medium">Total Tasks</p>
+            <p className="text-4xl font-bold text-amber-800 mt-2">{totalTasks}</p>
+            <div className="h-2 bg-amber-400 rounded-full mt-4 w-full opacity-60"></div>
+          </div>
+          <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 hover:bg-white/45 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <p className="text-emerald-700 text-sm font-medium">Completed</p>
+            <p className="text-4xl font-bold text-emerald-700 mt-2">{completedTasks}</p>
+            <div className="h-2 bg-emerald-400 rounded-full mt-4 w-full opacity-60"></div>
+          </div>
+          <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 hover:bg-white/45 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <p className="text-orange-600 text-sm font-medium">Pending</p>
+            <p className="text-4xl font-bold text-orange-700 mt-2">{pendingTasks}</p>
+            <div className="h-2 bg-orange-400 rounded-full mt-4 w-full opacity-60"></div>
+          </div>
+          <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 hover:bg-white/45 transition-all duration-300 transform hover:scale-105 hover:shadow-xl">
+            <p className="text-amber-600 text-sm font-medium">Completion Rate</p>
+            <p className="text-4xl font-bold text-amber-700 mt-2">
+              {totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0}%
+            </p>
+            <div className="h-2 bg-amber-300 rounded-full mt-4 w-full opacity-60"></div>
+          </div>
+        </div>
+
+        {/* Charts */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Bar Chart - Last 7 Days */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Completed Tasks (Last 7 Days)</h2>
+        <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 transition-colors duration-300">
+          <h2 className="text-xl font-bold text-amber-900 mb-6">📈 Completed Tasks (Last 7 Days)</h2>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={last7Days}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="date" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="completed" fill="#10b981" />
+              <Bar dataKey="completed" fill="#059669" />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Pie Chart - Priority Distribution */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Priority Distribution</h2>
+        <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 transition-colors duration-300">
+          <h2 className="text-xl font-bold text-amber-900 mb-6">🎯 Priority Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -110,8 +138,8 @@ export default function Stats() {
         </div>
 
         {/* Pie Chart - Status Distribution */}
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-bold text-gray-800 mb-4">Task Status</h2>
+        <div className="backdrop-blur-xl bg-white/35 border border-white/60 rounded-3xl shadow-lg p-6 transition-colors duration-300">
+          <h2 className="text-xl font-bold text-amber-900 mb-6">✨ Task Status</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
               <Pie
@@ -133,6 +161,7 @@ export default function Stats() {
           </ResponsiveContainer>
         </div>
       </div>
+      </main>
     </div>
   );
 }
